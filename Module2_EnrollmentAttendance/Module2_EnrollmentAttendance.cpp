@@ -27,6 +27,7 @@ private:
     string courseName;
     string sectionName;
     int capacity;
+    vector<Student> students;
 
 public:
     Section(string course, string section, int cap) {
