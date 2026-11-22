@@ -40,6 +40,21 @@ public:
         cout << courseName << " | Section: " << sectionName
              << " | Capacity: " << capacity << endl;
     }
+        bool isFull() const {
+        return (int)students.size() >= capacity;
+    }
+
+    bool enrollStudent(const Student& s) {
+        if (isFull()) {
+            cout << "[FAILED] Section is full. Cannot enroll "
+                 << s.getName() << "." << endl;
+            return false;
+        }
+        students.push_back(s);
+        cout << "[OK] " << s.getName() << " enrolled in "
+             << courseName << " (Section " << sectionName << ")." << endl;
+        return true;
+    }
 };
 
 int main() {
@@ -61,6 +76,14 @@ int main() {
 
     Section sec("Object Oriented Programming", "D1", 5);
     sec.displayInfo();
+
+        sec.enrollStudent(s1);
+    sec.enrollStudent(s2);
+    sec.enrollStudent(s3);
+    sec.enrollStudent(s4);
+    sec.enrollStudent(s5);
+    sec.enrollStudent(s6);
+    sec.enrollStudent(s7);
 
     return 0;
 }
