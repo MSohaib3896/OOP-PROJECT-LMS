@@ -39,6 +39,26 @@ public:
     }
 };
 
+class Grading
+{
+private:
+    int obtainedMarks;
+    string remarks;
+
+public:
+    void setGrade(int marks, string rem)
+    {
+        obtainedMarks = marks;
+        remarks = rem;
+    }
+
+    void showGrade()
+    {
+        cout << "Obtained Marks: " << obtainedMarks << endl;
+        cout << "Teacher Remarks: " << remarks << endl;
+    }
+};
+
 int main()
 {
     Assignment a1;
@@ -51,8 +71,11 @@ int main()
     s1.submitAssignment(501, "Submitted");
     s1.showSubmission();
 
+    cout << "-------------------" << endl;
+
+    Grading g1;
+    g1.setGrade(18, "Good work");
+    g1.showGrade();
+
     return 0;
 }
-
-
-
