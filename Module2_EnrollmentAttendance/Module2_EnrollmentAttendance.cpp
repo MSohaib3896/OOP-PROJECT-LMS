@@ -17,6 +17,18 @@ public:
     string getName() const { return name; }
     string getRollNo() const { return rollNo; }
 
+        void setName(string n) {
+        if (n != "") {
+            name = n;
+        }
+    }
+
+    void setRollNo(string r) {
+        if (r != "") {
+            rollNo = r;
+        }
+    }
+
     void display() const {
         cout << "Name: " << name << ", Roll No: " << rollNo << endl;
     }
@@ -77,13 +89,17 @@ int main() {
     Section sec("Object Oriented Programming", "D1", 5);
     sec.displayInfo();
 
-        sec.enrollStudent(s1);
+    sec.enrollStudent(s1);
     sec.enrollStudent(s2);
     sec.enrollStudent(s3);
     sec.enrollStudent(s4);
     sec.enrollStudent(s5);
     sec.enrollStudent(s6);
     sec.enrollStudent(s7);
+
+    s7.setRollNo("F202533208");
+    s7.setName("");
+    s7.display();
 
     return 0;
 }
