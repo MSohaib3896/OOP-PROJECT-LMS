@@ -32,6 +32,9 @@ public:
     void display() const {
         cout << "Name: " << name << ", Roll No: " << rollNo << endl;
     }
+        ~Student() {
+
+    }
 };
 
 class Section {
@@ -45,7 +48,7 @@ public:
     Section(string course, string section, int cap) {
         courseName = course;
         sectionName = section;
-        capacity = cap;
+        capacity = (cap > 0) ? cap : 1;
     }
 
     void displayInfo() const {
@@ -66,6 +69,21 @@ public:
         cout << "[OK] " << s.getName() << " enrolled in "
              << courseName << " (Section " << sectionName << ")." << endl;
         return true;
+    }
+        string getCourseName() const { return courseName; }
+    string getSectionName() const { return sectionName; }
+    int getCapacity() const { return capacity; }
+    int getEnrolledCount() const { return (int)students.size(); }
+
+        void setCapacity(int cap) {
+        if (cap > 0 && cap >= (int)students.size()) {
+            capacity = cap;
+        } else {
+            cout << "[FAILED] Invalid capacity." << endl;
+        }
+    }
+        ~Section() {
+        cout << "Section " << sectionName << " destroyed." << endl;
     }
 };
 
@@ -100,6 +118,12 @@ int main() {
     s7.setRollNo("F202533208");
     s7.setName("");
     s7.display();
+
+    cout << "Enrolled: " << sec.getEnrolledCount()
+         << "/" << sec.getCapacity() << endl;
+    sec.setCapacity(2);
+    sec.setCapacity(6);
+    cout << "New capacity: " << sec.getCapacity() << endl;
 
     return 0;
 }
