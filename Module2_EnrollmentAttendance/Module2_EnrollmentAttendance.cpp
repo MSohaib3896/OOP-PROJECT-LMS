@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <iomanip>
 using namespace std;
 
 class Student {
@@ -65,11 +66,30 @@ public:
                  << s.getName() << "." << endl;
             return false;
         }
+
+
         students.push_back(s);
         cout << "[OK] " << s.getName() << " enrolled in "
              << courseName << " (Section " << sectionName << ")." << endl;
         return true;
     }
+
+      void displayStudents() const {
+        cout << "\n" << string(50, '=') << endl;
+        cout << " " << courseName << " | Section " << sectionName << endl;
+        cout << " Seats filled: " << students.size() << "/" << capacity << endl;
+        cout << string(50, '=') << endl;
+        cout << left << setw(5) << "No." << setw(25) << "Name"
+             << "Roll No" << endl;
+        cout << string(50, '-') << endl;
+        for (size_t i = 0; i < students.size(); i++) {
+            cout << left << setw(5) << (i + 1)
+                 << setw(25) << students[i].getName()
+                 << students[i].getRollNo() << endl;
+        }
+        cout << string(50, '=') << endl;
+    }
+
         string getCourseName() const { return courseName; }
     string getSectionName() const { return sectionName; }
     int getCapacity() const { return capacity; }
@@ -96,13 +116,7 @@ int main() {
     Student s6("Hamza Rahim", "F202533206");
     Student s7("Taha", "F202533207");
 
-    s1.display();
-    s2.display();
-    s3.display();
-    s4.display();
-    s5.display();
-    s6.display();
-    s7.display();
+    cout << "===== UMT LMS - Enrollment Portal =====" << endl;
 
     Section sec("Object Oriented Programming", "D1", 5);
     sec.displayInfo();
@@ -114,6 +128,8 @@ int main() {
     sec.enrollStudent(s5);
     sec.enrollStudent(s6);
     sec.enrollStudent(s7);
+
+    sec.displayStudents();
 
     s7.setRollNo("F202533208");
     s7.setName("");
