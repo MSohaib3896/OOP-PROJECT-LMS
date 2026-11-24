@@ -1,5 +1,7 @@
-#include <string>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
 using namespace std;
 class Course {
 private:
@@ -58,3 +60,30 @@ public:
              << " | Department: " << department << "\n";
     }
 };
+    bool addPrerequisite(const string& prereqCode) {
+        if (prereqCode.empty() || prereqCode == courseCode) {
+            cout << "Invalid prerequisite.\n";
+            return false;
+        }
+        if (hasPrerequisite(prereqCode)) {
+            cout << "Prerequisite already added.\n";
+            return false;
+        }
+        prerequisites.push_back(prereqCode);
+        return true;
+    }
+    bool removePrerequisite(const string& prereqCode) {
+        auto it = find(prerequisites.begin(), prerequisites.end(), prereqCode);
+        if (it == prerequisites.end()) {
+            return false;
+        }
+        prerequisites.erase(it);
+        return true;
+    }
+    bool hasPrerequisite(const string& prereqCode) const {
+        return find(prerequisites.begin(), prerequisites.end(), prereqCode)
+               != prerequisites.end();
+    }
+    const vector<string>& getPrerequisites() const {
+        return prerequisites;
+    }
