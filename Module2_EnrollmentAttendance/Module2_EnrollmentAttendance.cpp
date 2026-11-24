@@ -38,6 +38,29 @@ public:
     }
 };
 
+class AttendanceRecord {
+private:
+    string rollNo;
+    string date;
+    bool present;
+
+public:
+    AttendanceRecord(string r, string d, bool p) {
+        rollNo = r;
+        date = d;
+        present = p;
+    }
+
+    string getRollNo() const { return rollNo; }
+    string getDate() const { return date; }
+    bool isPresent() const { return present; }
+
+    void display() const {
+        cout << date << " | " << rollNo << " | "
+             << (present ? "Present" : "Absent") << endl;
+    }
+};
+
 class Section {
 private:
     string courseName;
@@ -140,6 +163,12 @@ int main() {
     sec.setCapacity(2);
     sec.setCapacity(6);
     cout << "New capacity: " << sec.getCapacity() << endl;
+
+    cout << "\n--- Attendance Test ---" << endl;
+    AttendanceRecord a1("F202533201", "24-11-2026", true);
+    AttendanceRecord a2("F202533202", "24-11-2026", false);
+    a1.display();
+    a2.display();
 
     return 0;
 }
