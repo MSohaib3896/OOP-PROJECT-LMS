@@ -192,9 +192,12 @@ int main() {
     a2.display();
         cout << "\n--- Section Attendance ---" << endl;
     sec.markAttendance("F202533201", "24-11-2026", true);
-    sec.markAttendance("F202533202", "24-11-2026", false);
-    sec.markAttendance("F202533203", "24-11-2026", true);
-    sec.markAttendance("F202533206", "24-11-2026", true);   // not enrolled, fails
+    sec.markAttendance("F202533202", "24-11-2026", true);
+    sec.markAttendance("F202533203", "24-11-2026", false);
+    sec.markAttendance("F202533204", "24-11-2026", true);
+    sec.markAttendance("F202533205", "24-11-2026", true);
+
+    sec.markAttendance("F202533206", "24-11-2026", true);
     sec.displayAttendance();
 
     return 0;
