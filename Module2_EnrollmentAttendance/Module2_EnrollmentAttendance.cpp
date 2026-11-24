@@ -71,6 +71,14 @@ private:
         }
         return false;
     }
+    string findName(const string& rollNo) const {
+        for (size_t i = 0; i < students.size(); i++) {
+            if (students[i].getRollNo() == rollNo) {
+                return students[i].getName();
+            }
+        }
+        return "Unknown";
+    }
 
 public:
     Section(string course, string section, int cap) {
@@ -129,9 +137,12 @@ public:
     void displayAttendance() const {
         cout << "\n--- Attendance Log: " << courseName
              << " (Section " << sectionName << ") ---" << endl;
-        for (size_t i = 0; i < attendance.size(); i++) {
-            attendance[i].display();
-        }
+           for (size_t i = 0; i < attendance.size(); i++) {
+        cout << attendance[i].getDate() << " | "
+             << left << setw(20) << findName(attendance[i].getRollNo())
+             << " | " << attendance[i].getRollNo() << " | "
+             << (attendance[i].isPresent() ? "Present" : "Absent") << endl;
+    }
     }
 
         string getCourseName() const { return courseName; }
