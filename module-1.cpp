@@ -8,6 +8,7 @@ private:
     string courseCode;
     string title;
     int creditHours;
+    vector<string> prerequisites;
 public:
     Course() : courseCode(""), title(""), creditHours(0) {}
     Course(string code, string title, int creditHours)
@@ -28,9 +29,43 @@ public:
         creditHours = hours;
         return true;
     }
+    bool addPrerequisite(const string& prereqCode) {
+        if (prereqCode.empty() || prereqCode == courseCode) {
+            cout << "Invalid prerequisite.\n";
+            return false;
+        }
+        if (hasPrerequisite(prereqCode)) {
+            cout << "Prerequisite already added.\n";
+            return false;
+        }
+        prerequisites.push_back(prereqCode);
+        return true;
+    }
+    bool removePrerequisite(const string& prereqCode) {
+        vector<string>::iterator it = find(prerequisites.begin(), prerequisites.end(), prereqCode);
+        if (it == prerequisites.end()) {
+            return false;
+        }
+        prerequisites.erase(it);
+        return true;
+    }
+    bool hasPrerequisite(const string& prereqCode) const {
+        return find(prerequisites.begin(), prerequisites.end(), prereqCode)
+               != prerequisites.end();
+    }
+    const vector<string>& getPrerequisites() const {
+        return prerequisites;
+    }
     void display() const {
         cout << courseCode << " | " << title
              << " | Credit Hours: " << creditHours << "\n";
+        if (!prerequisites.empty()) {
+            cout << "  Prerequisites: ";
+            for (size_t i = 0; i < prerequisites.size(); ++i) {
+                cout << prerequisites[i]
+                     << (i + 1 < prerequisites.size() ? ", " : "\n");
+            }
+        }
     }
 };
 class Instructor {
@@ -53,6 +88,10 @@ public:
         name = newName;
     }
     void setDepartment(const string& newDepartment) {
+        if (newDepartment.empty()) {
+            cout << "Department cannot be empty.\n";
+            return;
+        }
         department = newDepartment;
     }
     void display() const {
@@ -60,30 +99,13 @@ public:
              << " | Department: " << department << "\n";
     }
 };
-    bool addPrerequisite(const string& prereqCode) {
-        if (prereqCode.empty() || prereqCode == courseCode) {
-            cout << "Invalid prerequisite.\n";
-            return false;
-        }
-        if (hasPrerequisite(prereqCode)) {
-            cout << "Prerequisite already added.\n";
-            return false;
-        }
-        prerequisites.push_back(prereqCode);
-        return true;
-    }
-    bool removePrerequisite(const string& prereqCode) {
-        auto it = find(prerequisites.begin(), prerequisites.end(), prereqCode);
-        if (it == prerequisites.end()) {
-            return false;
-        }
-        prerequisites.erase(it);
-        return true;
-    }
-    bool hasPrerequisite(const string& prereqCode) const {
-        return find(prerequisites.begin(), prerequisites.end(), prereqCode)
-               != prerequisites.end();
-    }
-    const vector<string>& getPrerequisites() const {
-        return prerequisites;
-    }
+int main() {
+    Course cs101("CS101", "Intro to Programming", 3);
+    Course cs201("CS201", "Data Structures", 4);
+    cs201.addPrerequisite("CS101");
+    Instructor prof("I01", "Dr. Ahmed", "Computer Science");
+    cs101.display();
+    cs201.display();
+    prof.display();
+    return 0;
+}
