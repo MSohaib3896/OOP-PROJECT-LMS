@@ -14,7 +14,6 @@ public:
         name = n;
         rollNo = r;
     }
-
     string getName() const { return name; }
     string getRollNo() const { return rollNo; }
 
@@ -23,21 +22,17 @@ public:
             name = n;
         }
     }
-
     void setRollNo(string r) {
         if (r != "") {
             rollNo = r;
         }
     }
-
     void display() const {
         cout << "Name: " << name << ", Roll No: " << rollNo << endl;
     }
         ~Student() {
-
     }
 };
-
 class AttendanceRecord {
 private:
     string rollNo;
@@ -50,7 +45,6 @@ public:
         date = d;
         present = p;
     }
-
     string getRollNo() const { return rollNo; }
     string getDate() const { return date; }
     bool isPresent() const { return present; }
@@ -67,6 +61,16 @@ private:
     string sectionName;
     int capacity;
     vector<Student> students;
+    vector<AttendanceRecord> attendance;
+
+    bool isEnrolled(const string& rollNo) const {
+        for (size_t i = 0; i < students.size(); i++) {
+            if (students[i].getRollNo() == rollNo) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 public:
     Section(string course, string section, int cap) {
@@ -74,7 +78,6 @@ public:
         sectionName = section;
         capacity = (cap > 0) ? cap : 1;
     }
-
     void displayInfo() const {
         cout << courseName << " | Section: " << sectionName
              << " | Capacity: " << capacity << endl;
@@ -82,6 +85,7 @@ public:
         bool isFull() const {
         return (int)students.size() >= capacity;
     }
+
 
     bool enrollStudent(const Student& s) {
         if (isFull()) {
@@ -111,6 +115,23 @@ public:
                  << students[i].getRollNo() << endl;
         }
         cout << string(50, '=') << endl;
+    }
+        bool markAttendance(string rollNo, string date, bool present) {
+        if (!isEnrolled(rollNo)) {
+            cout << "[FAILED] " << rollNo
+                 << " is not enrolled in this section." << endl;
+            return false;
+        }
+        attendance.push_back(AttendanceRecord(rollNo, date, present));
+        return true;
+    }
+
+    void displayAttendance() const {
+        cout << "\n--- Attendance Log: " << courseName
+             << " (Section " << sectionName << ") ---" << endl;
+        for (size_t i = 0; i < attendance.size(); i++) {
+            attendance[i].display();
+        }
     }
 
         string getCourseName() const { return courseName; }
@@ -169,6 +190,12 @@ int main() {
     AttendanceRecord a2("F202533202", "24-11-2026", false);
     a1.display();
     a2.display();
+        cout << "\n--- Section Attendance ---" << endl;
+    sec.markAttendance("F202533201", "24-11-2026", true);
+    sec.markAttendance("F202533202", "24-11-2026", false);
+    sec.markAttendance("F202533203", "24-11-2026", true);
+    sec.markAttendance("F202533206", "24-11-2026", true);   // not enrolled, fails
+    sec.displayAttendance();
 
     return 0;
 }
