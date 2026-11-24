@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
+#include <limits>
 using namespace std;
 
-class Result
+class Student
 {
-private:  
+private:
     int studentID;
     string studentName;
 
@@ -15,25 +16,30 @@ public:
         studentName = "Unknown";
         cout << "Student object created." << endl;
     }
+
     void setStudent(int id, string name)
     {
         studentID = id;
         studentName = name;
     }
+
     void displayStudent() const
     {
         cout << "Student ID: " << studentID << endl;
         cout << "Student Name: " << studentName << endl;
     }
+
     int getStudentID() const
     {
         return studentID;
-    }  
+    }
+
     ~Student()
     {
         cout << "Student object destroyed." << endl;
     }
 };
+
 class Result
 {
 private:
@@ -49,21 +55,23 @@ public:
         totalMarks = 100;
         cout << "Result object created." << endl;
     }
+
     void setResult(string sub, float obtained, float total)
     {
         subject = sub;
         marks = obtained;
         totalMarks = total;
     }
+
     float calculatePercentage() const
     {
         if (totalMarks <= 0)
         {
             return 0;
         }
-
         return (marks / totalMarks) * 100;
     }
+
     char calculateGrade() const
     {
         float percentage = calculatePercentage();
@@ -79,10 +87,12 @@ public:
         else
             return 'F';
     }
+
     bool isPassed() const
     {
         return calculatePercentage() >= 50;
     }
+
     void displayResult() const
     {
         cout << "\n--- Student Result ---" << endl;
@@ -96,12 +106,12 @@ public:
         else
             cout << "Status: Fail" << endl;
     }
+
     ~Result()
     {
         cout << "Result object destroyed." << endl;
     }
 };
-
 
 int main()
 {
@@ -117,7 +127,7 @@ int main()
     cout << "\nEnter Student ID: ";
     cin >> id;
 
-    cin.ignore();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter Student Name: ";
     getline(cin, name);
@@ -130,15 +140,13 @@ int main()
 
     cout << "Enter Total Marks: ";
     cin >> totalMarks;
+
     student1.setStudent(id, name);
     result1.setResult(subject, marks, totalMarks);
+
     cout << "\n--- Student Information ---" << endl;
     student1.displayStudent();
-
     result1.displayResult();
 
     return 0;
 }
-
-   
-
