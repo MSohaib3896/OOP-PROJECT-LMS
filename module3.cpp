@@ -8,6 +8,21 @@ private:
     int assignmentID;
 
 public:
+    // Default Constructor
+    Assignment() {
+        assignmentID = 0;
+    }
+
+    // Parameterized Constructor
+    Assignment(int id) {
+        assignmentID = id;
+    }
+
+    // Destructor
+    ~Assignment() {
+        cout << "Assignment object destroyed (ID: " << assignmentID << ")" << endl;
+    }
+
     // Setter
     void setAssignmentID(int id) {
         assignmentID = id;
@@ -30,6 +45,23 @@ private:
     string submissionStatus;
 
 public:
+    // Default Constructor
+    Submission() {
+        studentID = 0;
+        submissionStatus = "Pending";
+    }
+
+    // Parameterized Constructor
+    Submission(int sID, string status) {
+        studentID = sID;
+        submissionStatus = status;
+    }
+
+    // Destructor
+    ~Submission() {
+        cout << "Submission object destroyed (Student ID: " << studentID << ")" << endl;
+    }
+
     // Setters
     void setStudentID(int sID) {
         studentID = sID;
@@ -61,6 +93,23 @@ private:
     string remarks;
 
 public:
+    // Default Constructor
+    Grading() {
+        obtainedMarks = 0;
+        remarks = "No remarks";
+    }
+
+    // Parameterized Constructor
+    Grading(int marks, string rem) {
+        obtainedMarks = marks;
+        remarks = rem;
+    }
+
+    // Destructor
+    ~Grading() {
+        cout << "Grading object destroyed (Marks: " << obtainedMarks << ")" << endl;
+    }
+
     // Setters
     void setObtainedMarks(int marks) {
         obtainedMarks = marks;
@@ -87,26 +136,26 @@ public:
 
 // Main Function
 int main() {
-    // Assignment Object
+    // Assignment Object (using Default Constructor + Setter)
     Assignment a1;
     a1.setAssignmentID(101);
     a1.display();
 
     cout << "-------------------" << endl;
 
-    // Submission Object
-    Submission s1;
-    s1.setStudentID(501);
-    s1.setSubmissionStatus("Submitted");
+    // Submission Object (using Parameterized Constructor)
+    Submission s1(501, "Submitted");
     s1.showSubmission();
 
     cout << "-------------------" << endl;
 
-    // Grading Object
+    // Grading Object (using Default Constructor + Setters)
     Grading g1;
     g1.setObtainedMarks(18);
     g1.setRemarks("Good work");
     g1.showGrade();
+
+    cout << "-------------------" << endl;
 
     return 0;
 }
