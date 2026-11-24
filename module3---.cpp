@@ -1,6 +1,6 @@
+
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 // 1. Assignment Class
@@ -39,33 +39,40 @@ public:
     }
 };
 
-// 2. Submission Class
+// 2. Submission Class (Updated with Student Name & Roll Number)
 class Submission {
 private:
-    int studentID;
+    string studentName;
+    string rollNo;
     string submissionStatus;
 
 public:
     // Default Constructor
     Submission() {
-        studentID = 0;
+        studentName = "Unknown";
+        rollNo = "N/A";
         submissionStatus = "Pending";
     }
 
     // Parameterized Constructor
-    Submission(int sID, string status) {
-        studentID = sID;
+    Submission(string name, string rNo, string status) {
+        studentName = name;
+        rollNo = rNo;
         submissionStatus = status;
     }
 
     // Destructor
     ~Submission() {
-        cout << "Submission object destroyed (Student ID: " << studentID << ")" << endl;
+        cout << "Submission object destroyed (" << studentName << ")" << endl;
     }
 
     // Setters
-    void setStudentID(int sID) {
-        studentID = sID;
+    void setStudentName(string name) {
+        studentName = name;
+    }
+
+    void setRollNo(string rNo) {
+        rollNo = rNo;
     }
 
     void setSubmissionStatus(string status) {
@@ -73,8 +80,12 @@ public:
     }
 
     // Getters
-    int getStudentID() const {
-        return studentID;
+    string getStudentName() const {
+        return studentName;
+    }
+
+    string getRollNo() const {
+        return rollNo;
     }
 
     string getSubmissionStatus() const {
@@ -82,7 +93,8 @@ public:
     }
 
     void showSubmission() const {
-        cout << "Student ID: " << getStudentID() << endl;
+        cout << "Student Name: " << getStudentName() << endl;
+        cout << "Roll No: " << getRollNo() << endl;
         cout << "Status: " << getSubmissionStatus() << endl;
     }
 };
@@ -137,26 +149,35 @@ public:
 
 // Main Function
 int main() {
-    // Assignment Object (using Default Constructor + Setter)
-    Assignment a1;
-    a1.setAssignmentID(101);
+    // Assignment Object
+    Assignment a1(101);
     a1.display();
+    cout << "===============================" << endl;
 
-    cout << "-------------------" << endl;
+    // 5 Students Data Arrays (Submissions & Grades)
+    Submission students[5] = {
+        Submission("Namra Imran", "f202533202", "Submitted"),
+        Submission("Sohaib", "f202533201", "Submitted"),
+        Submission("Nawaira Mushtaq", "f202533205", "Submitted"),
+        Submission("Rabiya Imtiaz", "f202533204", "Submitted"),
+        Submission("Maham Mohsin", "f202533203", "Submitted")
+    };
 
-    // Submission Object (using Parameterized Constructor)
-    Submission s1(501, "Submitted");
-    s1.showSubmission();
+    Grading grades[5] = {
+        Grading(19, "Excellent work"),
+        Grading(18, "Good work"),
+        Grading(20, "Outstanding"),
+        Grading(17, "Well done"),
+        Grading(18, "Good effort")
+    };
 
-    cout << "-------------------" << endl;
-
-    // Grading Object (using Default Constructor + Setters)
-    Grading g1;
-    g1.setObtainedMarks(18);
-    g1.setRemarks("Good work");
-    g1.showGrade();
-
-    cout << "-------------------" << endl;
+    // Display all 5 students' records
+    for (int i = 0; i < 5; i++) {
+        cout << "Student #" << (i + 1) << endl;
+        students[i].showSubmission();
+        grades[i].showGrade();
+        cout << "-------------------------------" << endl;
+    }
 
     return 0;
 }
