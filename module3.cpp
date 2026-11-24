@@ -2,79 +2,110 @@
 #include <string>
 using namespace std;
 
-class Assignment
-{
+// 1. Assignment Class
+class Assignment {
 private:
     int assignmentID;
 
 public:
-    void setID(int id)
-    {
+    // Setter
+    void setAssignmentID(int id) {
         assignmentID = id;
     }
 
-    void display()
-    {
-        cout << "Assignment ID: " << assignmentID << endl;
+    // Getter
+    int getAssignmentID() const {
+        return assignmentID;
+    }
+
+    void display() const {
+        cout << "Assignment ID: " << getAssignmentID() << endl;
     }
 };
 
-class Submission
-{
+// 2. Submission Class
+class Submission {
 private:
     int studentID;
     string submissionStatus;
 
 public:
-    void submitAssignment(int sID, string status)
-    {
+    // Setters
+    void setStudentID(int sID) {
         studentID = sID;
+    }
+
+    void setSubmissionStatus(string status) {
         submissionStatus = status;
     }
 
-    void showSubmission()
-    {
-        cout << "Student ID: " << studentID << endl;
-        cout << "Status: " << submissionStatus << endl;
+    // Getters
+    int getStudentID() const {
+        return studentID;
+    }
+
+    string getSubmissionStatus() const {
+        return submissionStatus;
+    }
+
+    void showSubmission() const {
+        cout << "Student ID: " << getStudentID() << endl;
+        cout << "Status: " << getSubmissionStatus() << endl;
     }
 };
 
-class Grading
-{
+// 3. Grading Class
+class Grading {
 private:
     int obtainedMarks;
     string remarks;
 
 public:
-    void setGrade(int marks, string rem)
-    {
+    // Setters
+    void setObtainedMarks(int marks) {
         obtainedMarks = marks;
+    }
+
+    void setRemarks(string rem) {
         remarks = rem;
     }
 
-    void showGrade()
-    {
-        cout << "Obtained Marks: " << obtainedMarks << endl;
-        cout << "Teacher Remarks: " << remarks << endl;
+    // Getters
+    int getObtainedMarks() const {
+        return obtainedMarks;
+    }
+
+    string getRemarks() const {
+        return remarks;
+    }
+
+    void showGrade() const {
+        cout << "Obtained Marks: " << getObtainedMarks() << endl;
+        cout << "Teacher Remarks: " << getRemarks() << endl;
     }
 };
 
-int main()
-{
+// Main Function
+int main() {
+    // Assignment Object
     Assignment a1;
-    a1.setID(101);
+    a1.setAssignmentID(101);
     a1.display();
 
     cout << "-------------------" << endl;
 
+    // Submission Object
     Submission s1;
-    s1.submitAssignment(501, "Submitted");
+    s1.setStudentID(501);
+    s1.setSubmissionStatus("Submitted");
     s1.showSubmission();
 
     cout << "-------------------" << endl;
 
+    // Grading Object
     Grading g1;
-    g1.setGrade(18, "Good work");
+    g1.setObtainedMarks(18);
+    g1.setRemarks("Good work");
     g1.showGrade();
 
     return 0;
