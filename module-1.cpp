@@ -1,41 +1,54 @@
-#include <algorithm>
 #include <iostream>
-#include <stdexcept>
 #include <string>
 #include <vector>
-
+#include <algorithm>
 using namespace std;
 
 class Instructor {
 private:
-    string instructorId;         
+    string instructorId;
     string name;
     string department;
 
-    static void requireText(const string& value, const string& field) {
-        if (value.empty())
-            throw invalid_argument(field + " cannot be empty");
+    static bool isBlank(const string& s) {
+        return s.find_first_not_of(" \t\n") == string::npos;
     }
+
 public:
-    Instructor(const string& id, const string& name, const string& department)
-        : instructorId(id), name(name), department(department) {
-        requireText(id, "Instructor ID");
-        requireText(name, "Instructor name");
-        requireText(department, "Department");
+    Instructor() : instructorId(""), name(""), department("") {}
+
+    Instructor(const string& id, const string& instructorName, const string& dept)
+        : instructorId(""), name(""), department("") {
+        if (isBlank(id)) cout << "Instructor ID cannot be empty.\n";
+        else instructorId = id;
+        setName(instructorName);
+        setDepartment(dept);
     }
 
     string getInstructorId() const { return instructorId; }
     string getName() const { return name; }
     string getDepartment() const { return department; }
-
-    void setName(const string& newName) {
-        requireText(newName, "Instructor name");
-        name = newName;
+    bool isValid() const {
+        return !instructorId.empty() && !name.empty() && !department.empty();
     }
 
-    void setDepartment(const string& newDepartment) {
-        requireText(newDepartment, "Department");
+    // Setters (ID is read-only after creation)
+    bool setName(const string& newName) {
+        if (isBlank(newName)) {
+            cout << "Instructor name cannot be empty.\n";
+            return false;
+        }
+        name = newName;
+        return true;
+    }
+
+    bool setDepartment(const string& newDepartment) {
+        if (isBlank(newDepartment)) {
+            cout << "Department cannot be empty.\n";
+            return false;
+        }
         department = newDepartment;
+        return true;
     }
 
     void display() const {
@@ -46,69 +59,86 @@ public:
 
 class Course {
 private:
-    static const int MIN_CREDITS = 1;
-    static const int MAX_CREDITS = 6;
-
-    string courseCode;             
+    string courseCode;
     string title;
     int creditHours;
-    vector<string> prerequisites;    
-    string instructorId;            
+    string assignedInstructorId;
+    vector<string> prerequisites;
 
-public:
-    Course(const string& code, const string& title, int creditHours)
-        : courseCode(code), title(title), creditHours(MIN_CREDITS) {
-        if (code.empty())
-            throw invalid_argument("Course code cannot be empty");
-        if (title.empty())
-            throw invalid_argument("Course title cannot be empty");
-        if (!setCreditHours(creditHours))
-            throw invalid_argument("Credit hours must be between 1 and 6");
+    static bool isBlank(const string& s) {
+        return s.find_first_not_of(" \t\n") == string::npos;
     }
 
+public:
+    Course() : courseCode(""), title(""), creditHours(0), assignedInstructorId("") {}
+
+    Course(const string& code, const string& courseTitle, int hours)
+        : courseCode(""), title(""), creditHours(0), assignedInstructorId("") {
+        if (isBlank(code)) cout << "Course code cannot be empty.\n";
+        else courseCode = code;
+        setTitle(courseTitle);
+        setCreditHours(hours);
+    }
+
+    // Getters
     string getCourseCode() const { return courseCode; }
     string getTitle() const { return title; }
     int getCreditHours() const { return creditHours; }
-    string getInstructorId() const { return instructorId; }
-    bool hasInstructor() const { return !instructorId.empty(); }
-
+    string getAssignedInstructorId() const { return assignedInstructorId; }
     const vector<string>& getPrerequisites() const { return prerequisites; }
+    bool isValid() const {
+        return !courseCode.empty() && !title.empty() && creditHours >= 1;
+    }
 
+    // Setters (course code is read-only after creation)
     bool setTitle(const string& newTitle) {
-        if (newTitle.empty()) return false;
+        if (isBlank(newTitle)) {
+            cout << "Course title cannot be empty.\n";
+            return false;
+        }
         title = newTitle;
         return true;
     }
 
     bool setCreditHours(int hours) {
-        if (hours < MIN_CREDITS || hours > MAX_CREDITS) return false;
+        if (hours < 1 || hours > 6) {
+            cout << "Invalid credit hours (must be 1-6).\n";
+            return false;
+        }
         creditHours = hours;
         return true;
     }
 
-    bool assignInstructor(const string& id) {
-        if (id.empty()) return false;
-        instructorId = id;
+    bool assignInstructor(const string& instructorId) {
+        if (isBlank(instructorId)) {
+            cout << "Instructor ID cannot be empty.\n";
+            return false;
+        }
+        assignedInstructorId = instructorId;
         return true;
     }
 
-    void removeInstructor() { instructorId.clear(); }
-
-    bool hasPrerequisite(const string& code) const {
-        return find(prerequisites.begin(), prerequisites.end(), code)
+    bool hasPrerequisite(const string& prereqCode) const {
+        return find(prerequisites.begin(), prerequisites.end(), prereqCode)
                != prerequisites.end();
     }
 
-    bool addPrerequisite(const string& code) {
-        if (code.empty() || code == courseCode || hasPrerequisite(code))
+    bool addPrerequisite(const string& prereqCode) {
+        if (isBlank(prereqCode) || prereqCode == courseCode) {
+            cout << "Invalid prerequisite.\n";
             return false;
-        prerequisites.push_back(code);
+        }
+        if (hasPrerequisite(prereqCode)) {
+            cout << "Prerequisite already added.\n";
+            return false;
+        }
+        prerequisites.push_back(prereqCode);
         return true;
     }
 
-    bool removePrerequisite(const string& code) {
+    bool removePrerequisite(const string& prereqCode) {
         vector<string>::iterator it =
-            find(prerequisites.begin(), prerequisites.end(), code);
+            find(prerequisites.begin(), prerequisites.end(), prereqCode);
         if (it == prerequisites.end()) return false;
         prerequisites.erase(it);
         return true;
@@ -116,14 +146,14 @@ public:
 
     void display() const {
         cout << courseCode << " | " << title
-             << " | Credit Hours: " << creditHours
-             << " | Instructor: " << (hasInstructor() ? instructorId : "TBA")
-             << "\n";
+             << " | Credit Hours: " << creditHours;
+        if (!assignedInstructorId.empty())
+            cout << " | Instructor: " << assignedInstructorId;
+        cout << "\n";
         if (!prerequisites.empty()) {
-            cout << "    Prerequisites: ";
+            cout << "  Prerequisites: ";
             for (size_t i = 0; i < prerequisites.size(); ++i)
-                cout << prerequisites[i]
-                     << (i + 1 < prerequisites.size() ? ", " : "\n");
+                cout << prerequisites[i] << (i + 1 < prerequisites.size() ? ", " : "\n");
         }
     }
 };
@@ -133,120 +163,106 @@ private:
     vector<Course> courses;
     vector<Instructor> instructors;
 
-    int courseIndex(const string& code) const {
+    Course* findCourse(const string& code) {
         for (size_t i = 0; i < courses.size(); ++i)
-            if (courses[i].getCourseCode() == code) return (int)i;
-        return -1;
+            if (courses[i].getCourseCode() == code) return &courses[i];
+        return 0;
     }
-
-    int instructorIndex(const string& id) const {
+    const Course* findCourse(const string& code) const {
+        for (size_t i = 0; i < courses.size(); ++i)
+            if (courses[i].getCourseCode() == code) return &courses[i];
+        return 0;
+    }
+    const Instructor* findInstructor(const string& id) const {
         for (size_t i = 0; i < instructors.size(); ++i)
-            if (instructors[i].getInstructorId() == id) return (int)i;
-        return -1;
+            if (instructors[i].getInstructorId() == id) return &instructors[i];
+        return 0;
     }
 
-    bool reaches(const string& from, const string& target,
-                 vector<string>& visited) const {
-        if (from == target) return true;
-        if (find(visited.begin(), visited.end(), from) != visited.end())
-            return false;
-        visited.push_back(from);
-
-        int idx = courseIndex(from);
-        if (idx < 0) return false;
-
-        const vector<string>& prereqs = courses[idx].getPrerequisites();
-        for (size_t i = 0; i < prereqs.size(); ++i)
-            if (reaches(prereqs[i], target, visited)) return true;
+    // true if 'target' is reachable from 'start' through prerequisites
+    bool reaches(const string& start, const string& target) const {
+        if (start == target) return true;
+        const Course* c = findCourse(start);
+        if (!c) return false;
+        const vector<string>& pre = c->getPrerequisites();
+        for (size_t i = 0; i < pre.size(); ++i)
+            if (reaches(pre[i], target)) return true;
         return false;
     }
 
 public:
     bool addInstructor(const Instructor& ins) {
-        if (instructorIndex(ins.getInstructorId()) >= 0) return false;
+        if (!ins.isValid()) {
+            cout << "Cannot add invalid instructor.\n";
+            return false;
+        }
+        if (findInstructor(ins.getInstructorId())) {
+            cout << "Instructor ID already exists.\n";
+            return false;
+        }
         instructors.push_back(ins);
         return true;
     }
 
     bool addCourse(const Course& c) {
-        if (courseIndex(c.getCourseCode()) >= 0) return false;  
+        if (!c.isValid()) {
+            cout << "Cannot add invalid course.\n";
+            return false;
+        }
+        if (findCourse(c.getCourseCode())) {
+            cout << "Course code already exists.\n";
+            return false;
+        }
         courses.push_back(c);
         return true;
     }
 
-    bool hasCourse(const string& code) const { return courseIndex(code) >= 0; }
-
-    bool findCourse(const string& code, Course& out) const {
-        int i = courseIndex(code);
-        if (i < 0) return false;
-        out = courses[i];
-        return true;
+    bool assignInstructor(const string& courseCode, const string& instructorId) {
+        Course* c = findCourse(courseCode);
+        if (!c) { cout << "Course not found.\n"; return false; }
+        if (!findInstructor(instructorId)) { cout << "Instructor not found.\n"; return false; }
+        return c->assignInstructor(instructorId);
     }
 
     bool addPrerequisite(const string& courseCode, const string& prereqCode) {
-        int ci = courseIndex(courseCode);
-        if (ci < 0 || courseIndex(prereqCode) < 0) return false;
-
-        vector<string> visited;
-        if (reaches(prereqCode, courseCode, visited)) return false;  
-
-        return courses[ci].addPrerequisite(prereqCode);
+        Course* c = findCourse(courseCode);
+        if (!c) { cout << "Course not found.\n"; return false; }
+        if (!findCourse(prereqCode)) { cout << "Prerequisite course not found.\n"; return false; }
+        if (reaches(prereqCode, courseCode)) {
+            cout << "Rejected: circular prerequisite (" << courseCode
+                 << " <-> " << prereqCode << ").\n";
+            return false;
+        }
+        return c->addPrerequisite(prereqCode);
     }
-
-    bool assignInstructor(const string& courseCode, const string& instructorId) {
-        int ci = courseIndex(courseCode);
-        if (ci < 0 || instructorIndex(instructorId) < 0) return false;
-        return courses[ci].assignInstructor(instructorId);
-    }
-
-    size_t courseCount() const { return courses.size(); }
 
     void displayAll() const {
-        cout << "=== Course Registry ===\n";
-        for (size_t i = 0; i < courses.size(); ++i) courses[i].display();
-        cout << "=== Instructors ===\n";
+        cout << "--- Instructors ---\n";
         for (size_t i = 0; i < instructors.size(); ++i) instructors[i].display();
+        cout << "--- Courses ---\n";
+        for (size_t i = 0; i < courses.size(); ++i) courses[i].display();
     }
 };
-
-static void report(const string& what, bool ok) {
-    cout << (ok ? "[OK]   " : "[FAIL] ") << what << "\n";
-}
 
 int main() {
     CourseRegistry registry;
 
     registry.addInstructor(Instructor("I01", "Dr. Ahmed", "Computer Science"));
-    registry.addInstructor(Instructor("I02", "Dr. Sara", "Mathematics"));
-
     registry.addCourse(Course("CS101", "Intro to Programming", 3));
     registry.addCourse(Course("CS201", "Data Structures", 4));
     registry.addCourse(Course("CS301", "Algorithms", 3));
 
-    cout << "--- Valid operations ---\n";
-    report("CS201 requires CS101", registry.addPrerequisite("CS201", "CS101"));
-    report("CS301 requires CS201", registry.addPrerequisite("CS301", "CS201"));
-    report("Assign I01 to CS101", registry.assignInstructor("CS101", "I01"));
+    registry.assignInstructor("CS101", "I01");
+    registry.assignInstructor("CS201", "I01");
 
-    cout << "\n--- Invalid operations (should all FAIL) ---\n";
-    report("Duplicate course CS101", registry.addCourse(Course("CS101", "Copy", 3)));
-    report("Duplicate prerequisite", registry.addPrerequisite("CS201", "CS101"));
-    report("Self prerequisite", registry.addPrerequisite("CS101", "CS101"));
-    report("Unknown prerequisite", registry.addPrerequisite("CS201", "XX999"));
-    report("Circular (CS101 requires CS301)", registry.addPrerequisite("CS101", "CS301"));
-    report("Unknown instructor", registry.assignInstructor("CS201", "I99"));
+    registry.addPrerequisite("CS201", "CS101");
+    registry.addPrerequisite("CS301", "CS201");
 
-    cout << "\n--- Constructor validation ---\n";
-    try {
-        Course bad("CS999", "Bad Course", 99);
-    } catch (const invalid_argument& e) {
-        cout << "Caught: " << e.what() << "\n";
-    }
-    try {
-        Instructor bad("I03", "", "Physics");
-    } catch (const invalid_argument& e) {
-        cout << "Caught: " << e.what() << "\n";
-    }
+    cout << "\n[Validation tests]\n";
+    registry.addPrerequisite("CS101", "CS301");   // circular -> rejected
+    registry.addPrerequisite("CS201", "CS999");   // missing course -> rejected
+    registry.addCourse(Course("CS401", "Bad Course", 9)); // invalid hours -> rejected
+    registry.assignInstructor("CS301", "I99");    // unknown instructor -> rejected
 
     cout << "\n";
     registry.displayAll();
